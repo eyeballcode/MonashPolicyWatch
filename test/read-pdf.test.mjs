@@ -62,4 +62,29 @@ possible, but no later than 11.55pm (time zone of the unit location) on the due 
 
         expect(new PolicyPDF(data1).isEqual(new PolicyPDF(data2))).to.be.false
     })
+
+    it("Gets the version name from a policy file", async () => {
+        const sc83 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
+        const sc81 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
+
+        expect(await new PolicyPDF(sc81).getVersionName()).to.equal('8.1')
+        expect(await new PolicyPDF(sc83).getVersionName()).to.equal('8.3')
+    })
+
+    it("Gets the policy name from a policy file", async () => {
+        const sc83 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
+        const sc81 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
+
+        expect(await new PolicyPDF(sc81).getProcedureName()).to.equal('Special Consideration Procedure')
+        expect(await new PolicyPDF(sc83).getProcedureName()).to.equal('Special Consideration Procedure')
+    })
+
+    it("Create a diff between 2 files", async () => {
+        const sc83 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
+        const sc81 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
+
+        const diff = await new PolicyPDF(sc81).diff(new PolicyPDF(sc83))
+        expect(diff).to.include('-pharmacist or psychologist). This includes video consultations')
+        expect(diff).to.include('+pharmacist or psychologist). This includes video/phone')
+    })
 })
