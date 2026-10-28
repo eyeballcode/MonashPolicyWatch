@@ -48,4 +48,18 @@ possible, but no later than 11.55pm (time zone of the unit location) on the due 
 
         expect(hash).equal('1abdd28ff7cb7aae63715e455d6d80118ad2cfac26f51ae549209e31dcb7f76a')
     })
+
+    it("Should match a copy of itself", async () => {
+        const data1 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
+        const data2 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
+
+        expect(new PolicyPDF(data1).isEqual(new PolicyPDF(data2))).to.be.true
+    })
+
+    it("Should not match a different file version", async () => {
+        const data1 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
+        const data2 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
+
+        expect(new PolicyPDF(data1).isEqual(new PolicyPDF(data2))).to.be.false
+    })
 })
