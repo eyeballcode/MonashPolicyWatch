@@ -4,6 +4,8 @@ import path from 'path'
 import { expect } from 'chai'
 import { PolicyPDF } from "../lib/PolicyPDF.mjs"
 
+const procedureName = 'Special Consideration Procedure'
+
 describe("The PDF parsing library", () => {
     it("Reads the text from the pdf file", async () => {
         const data = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
@@ -21,7 +23,7 @@ Procedures.`, 'Text did not include the spec con procedure text')
 describe("PolicyPDF.mjs", () => {
     it("Merges all pages into one string", async () => {
         const data = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
-        const text = await new PolicyPDF(data).getText()
+        const text = await new PolicyPDF(data, procedureName).getText()
 
         expect(text).to.include(`SPECIAL CONSIDERATION PROCEDURE
 SCOPE
@@ -36,7 +38,7 @@ possible, but no later than 11.55pm (time zone of the unit location) on the due 
 
     it("Removes page numbers from the text", async () => {
         const data = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
-        const text = await new PolicyPDF(data).getText()
+        const text = await new PolicyPDF(data, procedureName).getText()
 
         expect(text).not.to.include('Special Consideration Procedure | 6')
         expect(text).not.to.include('Special Consideration Procedure | 10')
@@ -44,7 +46,7 @@ possible, but no later than 11.55pm (time zone of the unit location) on the due 
 
     it("Generates a SHA256 hash for files", async () => {
         const data = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
-        const hash = new PolicyPDF(data).getHash()
+        const hash = new PolicyPDF(data, procedureName).getHash()
 
         expect(hash).equal('1abdd28ff7cb7aae63715e455d6d80118ad2cfac26f51ae549209e31dcb7f76a')
     })
@@ -53,37 +55,37 @@ possible, but no later than 11.55pm (time zone of the unit location) on the due 
         const data1 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
         const data2 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
 
-        expect(new PolicyPDF(data1).isEqual(new PolicyPDF(data2))).to.be.true
+        expect(new PolicyPDF(data1, procedureName).isEqual(new PolicyPDF(data2, procedureName))).to.be.true
     })
 
     it("Should not match a different file version", async () => {
         const data1 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
         const data2 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
 
-        expect(new PolicyPDF(data1).isEqual(new PolicyPDF(data2))).to.be.false
+        expect(new PolicyPDF(data1, procedureName).isEqual(new PolicyPDF(data2, procedureName))).to.be.false
     })
 
     it("Gets the version name from a policy file", async () => {
         const sc83 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
         const sc81 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
 
-        expect(await new PolicyPDF(sc81).getVersionName()).to.equal('8.1')
-        expect(await new PolicyPDF(sc83).getVersionName()).to.equal('8.3')
+        expect(await new PolicyPDF(sc81, procedureName).getVersionName()).to.equal('8.1')
+        expect(await new PolicyPDF(sc83, procedureName).getVersionName()).to.equal('8.3')
     })
 
     it("Gets the policy name from a policy file", async () => {
         const sc83 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
         const sc81 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
 
-        expect(await new PolicyPDF(sc81).getProcedureName()).to.equal('Special Consideration Procedure')
-        expect(await new PolicyPDF(sc83).getProcedureName()).to.equal('Special Consideration Procedure')
+        expect(await new PolicyPDF(sc81, procedureName).getProcedureName()).to.equal('Special Consideration Procedure')
+        expect(await new PolicyPDF(sc83, procedureName).getProcedureName()).to.equal('Special Consideration Procedure')
     })
 
     it("Create a diff between 2 files", async () => {
         const sc83 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
         const sc81 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
 
-        const diff = await new PolicyPDF(sc81).diff(new PolicyPDF(sc83))
+        const diff = await new PolicyPDF(sc81, procedureName).diff(new PolicyPDF(sc83, procedureName))
         expect(diff).to.include('-pharmacist or psychologist). This includes video consultations')
         expect(diff).to.include('+pharmacist or psychologist). This includes video/phone')
     })
