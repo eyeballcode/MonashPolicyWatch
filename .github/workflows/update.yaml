@@ -60,7 +60,7 @@ jobs:
     - uses: stefanzweifel/git-auto-commit-action@v7
       with:
         commit_message: ':robot: update policies [skip actions]'
-        branch: master
+        branch: main
         file_pattern: 'procedures'
 
         commit_user_name: Eyeball Edward
