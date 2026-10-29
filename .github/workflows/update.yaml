@@ -1,0 +1,65 @@
+name: Daily fetch script
+
+on:
+  schedule:
+    - cron: '5 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        ref: master
+        token: ${{ secrets.PAT }}
+  
+    #- name: Cache node modules
+    #  id: cache-npm
+    #  uses: actions/cache@v4
+    #  env:
+    #    cache-name: cache-node-modules
+    #  with:
+    #    # npm cache files are stored in `~/.npm` on Linux/macOS
+    #    path: ~/.npm
+    #    key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+    #    restore-keys: |
+    #      ${{ runner.os }}-build-${{ env.cache-name }}-
+    #      ${{ runner.os }}-build-
+    #      ${{ runner.os }}-
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v6
+      with:
+        node-version: '24.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run fetch script
+      run: node index.mjs
+      env:
+        EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+        CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+
+    - uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: ':robot: update policies [skip actions]'
+        branch: master
+        file_pattern: 'procedures'
+
+        commit_user_name: Eyeball Edward
+        commit_user_email: eyeballcode@users.noreply.github.com
+        commit_author: Eyeball Edward <eyeballcode@users.noreply.github.com>
