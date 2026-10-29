@@ -18,10 +18,13 @@ jobs:
       id-token: write
     
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         ref: main
         token: ${{ secrets.PAT }}
+
+        # Value already defaults to true, but `persist-credentials` is required to push new commits to the repository.
+        persist-credentials: true
   
     #- name: Cache node modules
     #  id: cache-npm
@@ -54,7 +57,7 @@ jobs:
         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
 
-    - uses: stefanzweifel/git-auto-commit-action@v5
+    - uses: stefanzweifel/git-auto-commit-action@v7
       with:
         commit_message: ':robot: update policies [skip actions]'
         branch: master
