@@ -46,7 +46,7 @@ const changes = (await Promise.all(Object.keys(procedureIDs).map(async procedure
     const currentProcedure = new PolicyPDF(currentData, procedureIDs[procedureID])
     const newProcedure = new PolicyPDF(latestData, procedureIDs[procedureID])
 
-    if (currentProcedure.isEqual(newProcedure)) return null
+    if (await currentProcedure.isEqual(newProcedure)) return null
 
     const patch = await currentProcedure.diff(newProcedure)
     await writeProcedure(procedureID, latestData)

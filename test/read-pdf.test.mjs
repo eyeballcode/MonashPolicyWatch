@@ -55,14 +55,21 @@ possible, but no later than 11.55pm (time zone of the unit location) on the due 
         const data1 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
         const data2 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
 
-        expect(new PolicyPDF(data1, procedureName).isEqual(new PolicyPDF(data2, procedureName))).to.be.true
+        expect(await new PolicyPDF(data1, procedureName).isEqual(new PolicyPDF(data2, procedureName))).to.be.true
+    })
+
+    it("Should match a copy of itself with slightly different metadata", async () => {
+        const data1 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
+        const data2 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.3-diff.pdf'))
+
+        expect(await new PolicyPDF(data1, procedureName).isEqual(new PolicyPDF(data2, procedureName))).to.be.true
     })
 
     it("Should not match a different file version", async () => {
         const data1 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon.pdf'))
         const data2 = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCon-8.1.pdf'))
 
-        expect(new PolicyPDF(data1, procedureName).isEqual(new PolicyPDF(data2, procedureName))).to.be.false
+        expect(await new PolicyPDF(data1, procedureName).isEqual(new PolicyPDF(data2, procedureName))).to.be.false
     })
 
     it("Gets the version name from a policy file", async () => {
