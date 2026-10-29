@@ -55,5 +55,6 @@ const changes = (await Promise.all(Object.keys(procedureIDs).map(async procedure
 }))).filter(Boolean).join('\n\n')
 
 if (changes.length > 0) {
+    console.log(changes)
     await mail(`Policy Updates ${new Date().toLocaleString().split(',')[0]}`, changes)
 }
