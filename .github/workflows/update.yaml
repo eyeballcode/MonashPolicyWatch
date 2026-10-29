@@ -8,8 +8,8 @@ on:
 jobs:
   build:
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: policy-watch
+      deployment: false
       
     runs-on: ubuntu-latest
     permissions:
@@ -20,7 +20,7 @@ jobs:
     steps:
     - uses: actions/checkout@v6
       with:
-        ref: master
+        ref: main
         token: ${{ secrets.PAT }}
   
     #- name: Cache node modules
