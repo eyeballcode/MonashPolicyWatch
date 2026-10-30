@@ -2,7 +2,7 @@ name: Daily fetch script
 
 on:
   schedule:
-    - cron: '45 13 * * *'
+    - cron: '17 * * * *'
       timezone: 'Australia/Melbourne'
   workflow_dispatch:
 
