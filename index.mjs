@@ -15,7 +15,12 @@ const procedureIDs = {
     1935787: "APC Procedure",
     1935799: "Exclusions Appeals Procedure",
     1935789: "Complaints Procedure",
-    2734556: "Support for Students Procedure"
+    2734556: "Support for Students Procedure",
+    1909252: "Student Fees Refund Procedure",
+    1909261: "Student Fees Procedure",
+    3017618: "Student Code of Conduct",
+    1909254: "Student General Misconduct Procedure",
+    1909247: "Disciplinary Hearings & Appeals Panels Procedure"
 }
 
 const baseURL = `https://publicpolicydms.monash.edu/Monash/documents/`
