@@ -7,10 +7,9 @@ const procedureName = 'Supporting documents for special circumstances'
 
 describe("The Webpage comparison library", () => {
     it("Extracts text from a webpage", async () => {
-        const data = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCircs-SuppDocs-Aug25.html'))
+        const data = await fs.readFile(path.join(import.meta.dirname, 'res', 'SpecCircs-SuppDocs-Nov26.html'))
         const parser = new MonashWebpage({ data })
         const text = parser.getText()
-        console.log(text)
 
         expect(text).to.include(`Supporting documents for special circumstances
 
