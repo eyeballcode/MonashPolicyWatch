@@ -1,11 +1,13 @@
 import fs from 'fs/promises'
 import path from 'path'
-import { PolicyPDF } from './lib/PolicyPDF.mjs'
 import MonashWebpage from './lib/MonashWebpage.mjs'
 
 const webpages = {
+    'SpecCircs': 'https://www.monash.edu/students/admin/fees/refunds-remission-credit/special-circumstances/',
     'SpecCircs-SuppDocs': 'https://www.monash.edu/students/admin/fees/refunds-remission-credit/special-circumstances/documents',
-    'SpecCon-SuppDocs': 'https://www.monash.edu/students/admin/assessments/extensions-special-consideration/documents'
+    'SpecCon': 'https://www.monash.edu/students/admin/assessments/extensions-special-consideration',
+    'SpecCon-SuppDocs': 'https://www.monash.edu/students/admin/assessments/extensions-special-consideration/documents',
+    'DeferExam': 'https://www.monash.edu/students/admin/assessments/extensions-special-consideration/defer'
 }
 
 const getWebpagePath = id => path.join(import.meta.dirname, 'webpages', `${id}.html`)
