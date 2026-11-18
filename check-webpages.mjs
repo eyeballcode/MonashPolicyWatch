@@ -15,18 +15,18 @@ const getWebpagePath = id => path.join(import.meta.dirname, 'webpages', `${id}.h
 const readWebpage = async id => {
     try {
         return await fs.readFile(getWebpagePath(id))
-    } catch (e) { return null }
+    } catch (e) { console.log(e); return null }
 }
 
 const writeWebpage = async (id, data) => {
     try {
         return await fs.writeFile(getWebpagePath(id), data)
-    } catch (e) { return null }
+    } catch (e) { console.log(e); return null }
 }
 
 export const getWebpageChanges = async () => (await Promise.all(Object.keys(webpages).map(async webpageID => {
     const currentData = await readWebpage(webpageID)
-    const latestData = Buffer.from(await (await fetch(`${webpages[webpageID]}`)).arrayBuffer())
+    const latestData = await (await fetch(`${webpages[webpageID]}`)).text()
 
     if (!currentData) {
         await writeWebpage(webpageID, latestData)
@@ -40,6 +40,7 @@ export const getWebpageChanges = async () => (await Promise.all(Object.keys(webp
 
     const patch = currentWebpage.diff(newWebpage)
     await writeWebpage(webpageID, latestData)
+    console.log('Updating', webpageID, 'to', latestData.toString().slice(0, 100))
 
     return patch
 }))).filter(Boolean).join('\n\n')
