@@ -3,7 +3,8 @@ import { getWebpageChanges } from './check-webpages.mjs'
 import { mail } from './mail.mjs'
 
 const procedureChanges = await getProcedureChanges()
-const webpageChanges = await getWebpageChanges()
+const webpageChanges = ''
+// const webpageChanges = await getWebpageChanges()
 
 const changes = (procedureChanges + '\n' + webpageChanges).trim()
 if (changes.length > 0) {

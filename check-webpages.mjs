@@ -7,7 +7,9 @@ const webpages = {
     'SpecCircs-SuppDocs': 'https://www.monash.edu/students/admin/fees/refunds-remission-credit/special-circumstances/documents',
     'SpecCon': 'https://www.monash.edu/students/admin/assessments/extensions-special-consideration',
     'SpecCon-SuppDocs': 'https://www.monash.edu/students/admin/assessments/extensions-special-consideration/documents',
-    'DeferExam': 'https://www.monash.edu/students/admin/assessments/extensions-special-consideration/defer'
+    'DeferExam': 'https://www.monash.edu/students/admin/assessments/extensions-special-consideration/defer',
+    'Intermission': 'https://www.monash.edu/students/admin/enrolments/change/intermission',
+    'CompassionateComplettingDocs': 'https://www.monash.edu/students/admin/enrolments/change/documents'
 }
 
 const getWebpagePath = id => path.join(import.meta.dirname, 'webpages', `${id}.html`)
@@ -15,13 +17,13 @@ const getWebpagePath = id => path.join(import.meta.dirname, 'webpages', `${id}.h
 const readWebpage = async id => {
     try {
         return await fs.readFile(getWebpagePath(id))
-    } catch (e) { console.log(e); return null }
+    } catch (e) { return null }
 }
 
 const writeWebpage = async (id, data) => {
     try {
         return await fs.writeFile(getWebpagePath(id), data)
-    } catch (e) { console.log(e); return null }
+    } catch (e) { return null }
 }
 
 export const getWebpageChanges = async () => (await Promise.all(Object.keys(webpages).map(async webpageID => {
@@ -40,7 +42,6 @@ export const getWebpageChanges = async () => (await Promise.all(Object.keys(webp
 
     const patch = currentWebpage.diff(newWebpage)
     await writeWebpage(webpageID, latestData)
-    console.log('Updating', webpageID, 'to', latestData.toString().slice(0, 100))
 
     return patch
 }))).filter(Boolean).join('\n\n')
